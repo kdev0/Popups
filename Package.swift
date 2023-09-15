@@ -5,20 +5,24 @@ import PackageDescription
 let package = Package(
     name: "Popups",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
     ],
     products: [
         .library(
             name: "Popups",
-            targets: ["Popups"]),
+            targets: ["Popups"]
+        ),
     ],
     dependencies: [],
     targets: [
         .target(
             name: "Popups",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "PopupsTests",
-            dependencies: ["Popups"]),
-    ]
+            dependencies: ["Popups"]
+        ),
+    ],
+    swiftLanguageVersions: [.v5]
 )

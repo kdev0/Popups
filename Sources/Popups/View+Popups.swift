@@ -14,10 +14,16 @@ public extension View {
             item.wrappedValue = nil
         }
 
-        return fullScreenCover(item: item, onDismiss: dismiss) { item in
+        @ViewBuilder
+        func popupContainer(item: Item) -> some View {
             PopupContainerView(item: item,
                                popupContent: content,
                                dismiss: dismiss)
         }
+
+        return ModalView(isPresented: .constant(true),
+                         item: item,
+                         onDismiss: dismiss,
+                         content: popupContainer)
     }
 }

@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-struct ModalView<Item: Identifiable, ContentView: View>: View {
+struct ModalView<Item: Identifiable, ParentContent: View, ContentView: View>: View {
     @Binding var isPresented: Bool
     @Binding var item: Item?
     let onDismiss: (() -> Void)?
+    let parentContent: ParentContent
     @ViewBuilder let content: ( Item ) -> ContentView
 
     @State private var parentViewController: UIViewController?
     @State private var currentViewController: UIViewController?
 
     var body: some View {
-        self
-            .currentViewController { currentViewController = $0 }
+        parentContent
+            .currentViewController { parentViewController = $0 }
             .onChange(of: isPresented) { _ in checkActionForViewState() }
             .onChange(of: item?.id) { _ in checkActionForViewState() }
             .onDisappear {
@@ -29,12 +30,6 @@ struct ModalView<Item: Identifiable, ContentView: View>: View {
 }
 
 private extension ModalView {
-    func currentViewController(onSetting: @escaping (UIViewController) -> Void) -> some View {
-        let view = CurrentViewController(onSetting: onSetting)
-
-        return self.overlay(view.frame(width: .zero, height: .zero))
-    }
-
     func checkActionForViewState() {
         switch (isPresented, item, currentViewController) {
         case let (true, .some(item), nil):
@@ -62,7 +57,7 @@ private extension ModalView {
         let viewController = CustomHostingViewController(rootView: content,
                                                          onDismiss: userDismissHandler)
         viewController.modalTransitionStyle = .crossDissolve
-        viewController.modalPresentationStyle = .fullScreen
+        viewController.modalPresentationStyle = .overFullScreen
         viewController.view.backgroundColor = .clear
 
         parentViewController?.present(viewController, animated: true)

@@ -24,6 +24,7 @@ public extension View {
         return ModalView(isPresented: .constant(true),
                          item: item,
                          onDismiss: dismiss,
+                         parentContent: self,
                          content: popupContainer)
     }
 }

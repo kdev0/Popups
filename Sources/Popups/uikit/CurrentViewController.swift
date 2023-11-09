@@ -16,12 +16,14 @@ struct CurrentViewController: UIViewControllerRepresentable {
 
         viewController.view = CurrentView {
             var responder = viewController.view.next?.next
-            while  responder != nil {
+            while responder != nil {
                 if let controller = responder as? UIViewController {
                     DispatchQueue.main.async {
-                        onSetting(controller)
+                        onSetting( controller )
                     }
+                    break
                 }
+                responder = responder?.next
             }
         }
 
@@ -46,5 +48,13 @@ class CurrentView: UIView {
 
     override func didMoveToWindow() {
         onSetting()
+    }
+}
+
+extension View {
+    func currentViewController(onSetting: @escaping (UIViewController) -> Void) -> some View {
+        let view = CurrentViewController(onSetting: onSetting)
+
+        return self.overlay(view.frame(width: .zero, height: .zero))
     }
 }

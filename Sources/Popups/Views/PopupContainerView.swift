@@ -14,32 +14,27 @@ struct PopupContainerView<Item: Identifiable, PopupContent: View>: View {
 
     @GestureState private var dragOffset: CGFloat = .zero
     @State private var contentHeight: CGFloat = .zero
-    @State private var backgroundAnimating: Bool = false
     @State private var contentAnimating = false
 
     var body: some View {
-        CleanerView(backgroundAnimating: $backgroundAnimating) {
-            BackgroundView(onTap: close)
-                .transition(.opacity)
-                .overlay(alignment: .bottom) {
-                    if contentAnimating {
-                        PopupView(content: { popupContent(item) }, onClose: dismiss)
-                            .transition(.move(edge: .bottom))
-                            .offset(y: dragOffset)
-                            .readSize { contentHeight = $0.height }
-                            .gesture(dragGesture())
-                            .animation(.spring(), value: dragOffset)
+        BackgroundView(onTap: close)
+            .overlay(alignment: .bottom) {
+                if contentAnimating {
+                    PopupView(content: { popupContent(item) }, onClose: dismiss)
+                        .transition(.move(edge: .bottom))
+                        .offset(y: dragOffset)
+                        .readSize { contentHeight = $0.height }
+                        .gesture(dragGesture())
+                        .animation(.spring(), value: dragOffset)
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    withAnimation(.spring()) {
+                        contentAnimating.toggle()
                     }
                 }
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation(.spring()) {
-                            contentAnimating.toggle()
-                        }
-                    }
-                }
-        }
-
+            }
     }
 }
 
@@ -47,11 +42,6 @@ private extension PopupContainerView {
     func close() {
         withAnimation(.spring()) {
             contentAnimating.toggle()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(.spring()) {
-                backgroundAnimating.toggle()
-            }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             dismiss()

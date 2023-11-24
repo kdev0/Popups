@@ -21,6 +21,28 @@ struct PopupView<Content: View>: View {
             content
                 .frame(maxWidth: .infinity)
         }
-        .background(Color.white.cornerRadius(20).ignoresSafeArea())
+//        .ignoresSafeArea(.all, edges: .bottom)
+        .clipShape(RoundedCorner(radius: 20, corners: [.topLeft, .topRight]), style: .init(eoFill: true, antialiased: true))
+        .background(content.background(ignoresSafeAreaEdges: .bottom).frame(maxWidth: .infinity)).ignoresSafeArea(edges: .bottom)
+//        .background(
+////            content
+//            Color.white
+//            .clipShape(RoundedCorner(radius: 20, corners: [.topLeft, .topRight]))
+//            .ignoresSafeArea(edges: .bottom)
+//        )
+//        .background(content.ba\)
+
+    }
+}
+
+extension PopupView {
+    struct RoundedCorner: Shape {
+        var radius: CGFloat = .infinity
+        var corners: UIRectCorner = .allCorners
+
+        func path(in rect: CGRect) -> Path {
+            let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+            return Path(path.cgPath)
+        }
     }
 }

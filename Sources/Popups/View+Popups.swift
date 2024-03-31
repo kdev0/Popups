@@ -27,4 +27,25 @@ public extension View {
                          parentContent: self,
                          content: popupContainer)
     }
+
+    func modalTransition<Item: Identifiable, Destination: View>(item: Binding<Item?>,
+                                                                 transitionType: TransitionType,
+                                                                 destination: @escaping (Item) -> Destination) -> some View {
+        let dismiss = {
+            item.wrappedValue = nil
+        }
+
+        @ViewBuilder
+        func popupContainer(item: Item) -> some View {
+            self.modifier(ModalTransitionViewModifier(item: item,
+                                                      transitionType: transitionType,
+                                                      destination: destination))
+        }
+        return ModalView(isPresented: .constant(true),
+                         item: item,
+                         onDismiss: dismiss,
+                         parentContent: self,
+                         content: popupContainer)
+    }
+
 }

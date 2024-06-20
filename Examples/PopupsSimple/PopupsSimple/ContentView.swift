@@ -10,6 +10,7 @@ import Popups
 
 struct ContentView: View {
     @State var showPopups: Id?
+    @State var isShown: Bool = false
 
     var body: some View {
         TabView {
@@ -21,8 +22,17 @@ struct ContentView: View {
                 .tabItem {
                     Label("Order", systemImage: "square.and.pencil")
                 }
+            
+            TabView3() { isShown = true }
+                .tabItem {
+                    Label("Bool", systemImage: "list.dash")
+                }
         }
         .popup(item: $showPopups) { id in
+            TabView2()
+                .frame(height: 400)
+        }
+        .popup(isPresented: $isShown) {
             TabView2()
                 .frame(height: 400)
         }

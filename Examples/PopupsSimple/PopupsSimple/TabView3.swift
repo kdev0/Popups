@@ -1,25 +1,25 @@
 //
-//  TabView1.swift
-//  PopupsSimple
+//  TabView3.swift
 //
-//  Created by Konstantin D. on 13.09.2023.
+//
+//  Created by Konstantin D. on 20.06.2024.
 //
 
 import SwiftUI
 
-struct TabView1: View {
-    let onPopup: (Id) -> Void
+struct TabView3: View {
+    let onPopup: () -> Void
 
     var body: some View {
         VStack {
             HStack {
                 ActivityIndicatorView()
-                Text("Activity view 1")
+                Text("Activity view 3")
             }
             .padding(20)
 
             Button {
-                onPopup(Id())
+                onPopup()
             } label: {
                 Text("Show popup")
             }

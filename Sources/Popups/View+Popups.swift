@@ -7,7 +7,28 @@
 
 import SwiftUI
 
+private struct ID: Identifiable {
+    let id: Int = .zero
+}
+
 public extension View {
+    func popup<Content: View>(isPresented item: Binding<Bool>,
+                              @ViewBuilder content: @escaping () -> Content) -> some View {
+
+
+        let newItem = Binding {
+            item.wrappedValue ? ID() : nil
+        } set: { value in
+            if value == nil {
+                item.wrappedValue = false
+            }
+        }
+
+        return popup(item: newItem) { _ in
+            content()
+        }
+    }
+    
     func popup<Item: Identifiable, Content: View>(item: Binding<Item?>,
                                                   @ViewBuilder content: @escaping ( Item ) -> Content) -> some View {
         let dismiss = {

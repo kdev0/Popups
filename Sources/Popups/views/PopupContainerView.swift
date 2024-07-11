@@ -40,10 +40,10 @@ struct PopupContainerView<Item: Identifiable, PopupContent: View>: View {
 
 private extension PopupContainerView {
     func close() {
-        withAnimation(.spring()) {
-            contentAnimating.toggle()
-        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.spring()) {
+                contentAnimating.toggle()
+            }
             dismiss()
         }
     }
